@@ -32,8 +32,17 @@ namespace OnlineShop.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Products product, IFormFile image)
         {
+
             if(!ModelState.IsValid)
             {
+                var searchProduct = _db.Products.FirstOrDefault(c => c.Name== product.Name);
+                if (searchProduct !=null)
+                {
+                    ViewBag.message = "This product is already exist!";
+                    ViewData["productTypeId"] = new SelectList(_db.ProductTypes.ToList(), "Id", "ProductType");
+                    ViewData["TagId"] = new SelectList(_db.SpecialTags.ToList(), "Id", "SpecialTag");
+                    return View(product);
+                }
                 if (image != null)
                 {
                     var name = Path.Combine(_he.WebRootPath + "/Images", Path.GetFileName(image.FileName));
@@ -98,7 +107,52 @@ namespace OnlineShop.Areas.Admin.Controllers
         // GET Details Action Method, (chua tao view)
         public  IActionResult Details(int? id)
         {
-            return View();
+            if(id == null)
+            {
+                return NotFound();
+            }
+            var product = _db.Products.Include(c => c.ProductTypes).Include(c => c.SpecialTag).FirstOrDefault(c => c.Id == id);
+            if(product==null)
+            {
+                return NotFound();
+            }
+            return View(product);
+        }
+        //-- Da tao view - 4:08 PM 16-12-2022
+
+        // GET Delete Action Method
+        public IActionResult Delete(int? id)
+        {
+            if(id == null)
+            {
+                return NotFound();
+            }
+            var product = _db.Products.Include(c=>c.ProductTypes).Include(c=>c.SpecialTag)
+                .Where(c => c.Id == id).FirstOrDefault();
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return View(product);
+        }
+
+        // POST Delete Action Method
+        [HttpPost]
+        [ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirm(int? id)
+        {
+            if(id == null)
+            {
+                return NotFound();
+            }
+            var product = _db.Products.FirstOrDefault(c => c.Id == id);
+            if(product == null)
+            {
+                return NotFound();
+            }
+            _db.Products.Remove(product);
+            await _db.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
     }
 }

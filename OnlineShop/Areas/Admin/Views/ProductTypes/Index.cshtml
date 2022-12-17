@@ -47,11 +47,11 @@
             if(edit != '' ){
                 alertify.success(edit);
             }
-            var delete = '@TempData["delete"]'
-            if(delete != ''){
-                alertify.success(delete);
+            // khong duoc de ten bien la delete -> trung tu khoa
+            var deleteProduct = '@TempData["delete"]'
+            if(deleteProduct != ''){
+                alertify.success(deleteProduct);
             }
         })
     </script>
-
 }

@@ -17,22 +17,52 @@
 <br />
 
 <div>
-    <table class="table table-striped border">
-        <tr class="table-info">
-            <th>
-                @Html.DisplayNameFor(c=>c.SpecialTag)
-            </th>
-            <th></th>
-            <th></th>
-        </tr>
-        @foreach(var item in Model){
-            <tr>
-                <td>@item.SpecialTag</td>
-                <td class="text-end">
-                    <partial name="_ButtonPartialForSpecialTag" model="item.Id"></partial>
-                </td>
+    <table class="table table-striped border" id="mySpecialTagsTable">
+        <thead>
+            <tr class="table-info">
+                <th>
+                    @Html.DisplayNameFor(c=>c.SpecialTag)
+                </th>
+                <th></th>
+                <th></th>
             </tr>
-        }
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.SpecialTag</td>
+                    <td class="text-end">
+                        <partial name="_ButtonPartialForSpecialTag" model="item.Id"></partial>
+                    </td>
+                </tr>
+            }
+        </tbody>
     </table>
 </div>
+
+@section scripts{
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#mySpecialTagsTable').DataTable();
+        });
+        $(function () {
+            var save = '@TempData["save"]'
+            if (save != '') {
+                alertify.success(save);
+            }
+            var edit = '@TempData["edit"]'
+            if (edit != '') {
+                alertify.success(edit);
+            }
+            // khong duoc de ten bien la delete -> trung tu khoa
+            var deleteProduct = '@TempData["delete"]'
+            if (deleteProduct != '') {
+                alertify.success(deleteProduct);
+            }
+        })
+    </script>
+}
+
 

@@ -87,7 +87,12 @@
     <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#myTable').DataTable();
+            $('#myTable').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+    });
         });
         $(function () {
             var save = '@TempData["save"]'

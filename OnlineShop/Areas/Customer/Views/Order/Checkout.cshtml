@@ -1,0 +1,130 @@
+﻿@model OnlineShop.Models.Order;
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+
+@using OnlineShop.Utility
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor;
+@{
+
+    List<Products> products = HttpContextAccessor.HttpContext.Session.Get<List<Products>>("products");
+
+    if (products == null)
+    {
+        products = new List<Products>();
+    }
+    
+}
+
+<br />
+<h2 class="text-info ">Order details</h2>
+
+<form asp-action="" method="post" enctype="multipart/form-data">
+    <div class="p-4 rounded border row">
+        <div asp-validation-summary=ModelOnly class="text-danger" />
+        <div class="col-6">
+            <div class="form-group row mb-2">
+                <div class="col-4">
+                    <label asp-for="Name"></label>
+                </div>
+                <div class="col-8">
+                    <input type="hidden" asp-for="Id" />
+                    <input asp-for="Name" class="form-control" />
+                </div>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group row mb-2">
+                <div class="col-4">
+                    <label asp-for="PhoneNo"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="PhoneNo" class="form-control" />
+                </div>
+                <span asp-validation-for="PhoneNo" class="text-danger"></span>
+            </div>
+            <div class="form-group row mb-2">
+                <div class="col-4">
+                    <label asp-for="Address"></label>
+                </div>
+                <div class="col-8">
+                    <select name="provinces" id="selectAddress" asp-for="Address" class="form-control" ></select>
+                </div>
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group row mb-2">
+                <div class="col-4">
+                    <label asp-for="Email"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Email"  class="form-control" />
+                </div>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group row mb-2">
+                <div class="col-4">
+                    <label asp-for="OrderDate"></label>
+                </div>
+                <div class="col-8">
+                    @*<select asp-for="ProductTypeId" asp-items="ViewBag.productTypeId" class="form-control"></select>*@
+                    <input @*asp-for="OrderDate"*@ value="@DateTime.Now" class="form-control" />
+                </div>
+                <span asp-validation-for="OrderDate" class="text-danger"></span>
+            </div>
+
+        </div>
+        <div class="col-6">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in products)
+                    {
+                        <tr>
+                            <td>
+                                <img src="~/@item.Image" height="100px" width="150px" style="object-fit:contain" />
+                            </td>
+                            <td>@item.Name</td>
+                            <td>@item.Price</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+
+    }
+    <script type="text/javascript">
+        var provincesAPI = "https://provinces.open-api.vn/api/?depth=2"
+        fetch(provincesAPI)
+            .then(function(res) { 
+                return res.json()
+            })
+            .then(function(provinces){
+                console.log(provinces)
+                var htmls = provinces.map(function(province) {
+                    if(province.name == undefined) {
+                        return ''
+                    }
+                    else
+                    return `<option>${province.name}</option>`
+                })
+                var html = htmls.join('')
+                document.getElementById('selectAddress').innerHTML = html
+            })
+    </script>
+    }
+
+

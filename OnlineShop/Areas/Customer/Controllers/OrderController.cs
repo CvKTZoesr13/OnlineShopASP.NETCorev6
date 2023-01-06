@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using OnlineShop.Data;
 using OnlineShop.Models;
 using OnlineShop.Utility;
@@ -19,6 +20,7 @@ namespace OnlineShop.Areas.Customer.Controllers
         // GET Checkout Action Method
         public IActionResult Checkout()
         {
+            ViewData["provinces"] = new SelectList(_db.ProductTypes.ToList(), "Id", "ProductType");
             return View();
         }
         // POST Checkout Action Method
@@ -32,7 +34,8 @@ namespace OnlineShop.Areas.Customer.Controllers
                 foreach(var product in products)
                 {
                     OrderDetails orderDetails = new OrderDetails();
-                    orderDetails.Id = product.Id;
+                    orderDetails.ProductId = product.Id;
+
                     anOrder.OrderDetails.Add(orderDetails);
                 }
             }
@@ -40,7 +43,7 @@ namespace OnlineShop.Areas.Customer.Controllers
             anOrder.OrderNo = GetOrderNo();
             _db.Orders.Add(anOrder);
             await _db.SaveChangesAsync();
-            HttpContext.Session.Set("products", null);
+            HttpContext.Session.Set("products",new List<Products>());
             return View();
         }
 

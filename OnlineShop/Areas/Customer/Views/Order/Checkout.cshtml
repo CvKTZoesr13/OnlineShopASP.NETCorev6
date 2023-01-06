@@ -21,7 +21,7 @@
 <br />
 <h2 class="text-info ">Order details</h2>
 
-<form asp-action="" method="post" enctype="multipart/form-data">
+<form asp-action="Checkout" method="post" enctype="multipart/form-data">
     <div class="p-4 rounded border row">
         <div asp-validation-summary=ModelOnly class="text-danger" />
         <div class="col-6">
@@ -32,8 +32,8 @@
                 <div class="col-8">
                     <input type="hidden" asp-for="Id" />
                     <input asp-for="Name" class="form-control" />
-                </div>
                 <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
             </div>
             <div class="form-group row mb-2">
                 <div class="col-4">
@@ -41,17 +41,18 @@
                 </div>
                 <div class="col-8">
                     <input asp-for="PhoneNo" class="form-control" />
-                </div>
                 <span asp-validation-for="PhoneNo" class="text-danger"></span>
+                </div>
             </div>
             <div class="form-group row mb-2">
                 <div class="col-4">
                     <label asp-for="Address"></label>
                 </div>
                 <div class="col-8">
-                    <select name="provinces" id="selectAddress" asp-for="Address" class="form-control" ></select>
-                </div>
+                    @*<select title="provinces" name="provinces" id="selectAddress" asp-for="Address" class="form-control" ></select>*@
+                    <input asp-for="Address" class="form-control"/>
                 <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
             </div>
             <div class="form-group row mb-2">
                 <div class="col-4">
@@ -59,8 +60,8 @@
                 </div>
                 <div class="col-8">
                     <input asp-for="Email"  class="form-control" />
-                </div>
                 <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
             </div>
             <div class="form-group row mb-2">
                 <div class="col-4">
@@ -68,7 +69,7 @@
                 </div>
                 <div class="col-8">
                     @*<select asp-for="ProductTypeId" asp-items="ViewBag.productTypeId" class="form-control"></select>*@
-                    <input @*asp-for="OrderDate"*@ value="@DateTime.Now" class="form-control" />
+                    <input asp-for="OrderDate" type="text" readonly style="background: #fff; cursor:pointer;" class="form-control" />
                 </div>
                 <span asp-validation-for="OrderDate" class="text-danger"></span>
             </div>
@@ -96,6 +97,12 @@
                     }
                 </tbody>
             </table>
+            <div class="text-end" >
+                <h3>Total Price : @products.Sum(c=>c.Price)</h3>
+            </div>
+            <div class="form-group text-end">
+                <input type="submit" value="Place Order" class="btn btn-success"/>
+            </div>
         </div>
 
     </div>
@@ -104,8 +111,28 @@
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
-
     }
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+@*    <link rel="stylesheet" href="/resources/demos/style.css">*@
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            $("#OrderDate").datepicker({ 
+                dateFormat: 'yy-mm-dd',
+                showAnim: "blind",
+                changeMonth: true,
+                changeYear: true,
+            });
+        });
+        console.log("datepicker function")
+    </script>
+
+
+
+
     <script type="text/javascript">
         var provincesAPI = "https://provinces.open-api.vn/api/?depth=2"
         fetch(provincesAPI)
@@ -119,10 +146,11 @@
                         return ''
                     }
                     else
-                    return `<option>${province.name}</option>`
+                        return `<option value = "${province.name}">${province.name}</option>`
                 })
                 var html = htmls.join('')
-                document.getElementById('selectAddress').innerHTML = html
+                //document.getElementById('selectAddress').innerHTML = html
+                
             })
     </script>
     }

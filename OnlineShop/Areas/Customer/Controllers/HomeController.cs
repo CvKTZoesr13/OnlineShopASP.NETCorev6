@@ -4,6 +4,7 @@ using OnlineShop.Data;
 using OnlineShop.Models;
 using OnlineShop.Utility;
 using System.Diagnostics;
+using X.PagedList;
 
 namespace OnlineShop.Areas.Customer.Controllers
 {
@@ -21,10 +22,10 @@ namespace OnlineShop.Areas.Customer.Controllers
         {
             _db = db;
         }
-
-        public IActionResult Index()
+            
+        public IActionResult Index(int? page)
         {
-            return View(_db.Products.Include(c => c.ProductTypes).Include(c => c.SpecialTag).ToList());
+            return View(_db.Products.Include(c => c.ProductTypes).Include(c => c.SpecialTag).ToList().ToPagedList(page?? 1, 9));
         }
 
         // GET Product Details Action Method

@@ -20,5 +20,7 @@ namespace OnlineShop.Data
         public DbSet<Order> Orders { get; set; }
         // method DbSet for Order Details
         public DbSet<OrderDetails> OrderDetails { get; set; }
+        // method DbSet for Application User
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
     }
 }

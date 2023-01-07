@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Thank you for creating your account to use our website!</h1>
+@section scripts{
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            var save = '@TempData["save"]'
+            if (save != '') {
+                alertify.success(save);
+            }
+            var edit = '@TempData["edit"]'
+            if (edit != '') {
+                alertify.success(edit);
+            }
+
+        })
+    </script>
+
+}
+
+

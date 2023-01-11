@@ -6,7 +6,7 @@
 <br />
 <h2 class="text-info ">Create New Account</h2>
 
-<form asp-action="Create" method="post" enctype="multipart/form-data">
+<form asp-action="Create" method="post" id="user-form" enctype="multipart/form-data">
     <div class="p-4 rounded border">
         <div asp-validation-summary=ModelOnly class="text-danger">
         </div>
@@ -57,7 +57,27 @@
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
-
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+        <script type="text/javascript">
+                $(document).ready(function() {
+                    $("#user-form").validate({
+                        rules: {
+                            UserName: {
+                                required: true,
+                            },
+                            PasswordHash: {
+                                required: true,
+                            }
+                        },
+                        messages: {
+                            UserName: "Please enter your name!",
+                            PasswordHash: "Please enter your password!"
+                        }
+                    });
+                })
+                
+        </script>
     }
     }
 

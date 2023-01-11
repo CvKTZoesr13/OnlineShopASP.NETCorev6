@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using OnlineShop.Data;
 using OnlineShop.Models;
 
 namespace OnlineShop.Areas.Customer.Controllers
@@ -9,15 +10,17 @@ namespace OnlineShop.Areas.Customer.Controllers
     public class UserController : Controller
     {
         UserManager<IdentityUser> _userManager;
-        public UserController(UserManager<IdentityUser>userManager)
+        ApplicationDbContext _db;
+        public UserController(UserManager<IdentityUser>userManager, ApplicationDbContext db)
         {
             _userManager = userManager;
+            _db = db;
         }
 
 
         public IActionResult Index()
         {
-            return View();
+            return View(_db.ApplicationUsers.ToList());
         }
 
 

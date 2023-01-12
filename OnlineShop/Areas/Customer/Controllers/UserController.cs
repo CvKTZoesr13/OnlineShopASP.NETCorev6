@@ -39,7 +39,7 @@ namespace OnlineShop.Areas.Customer.Controllers
                 var result = await _userManager.CreateAsync(user, user.PasswordHash);
                 if (result.Succeeded)
                 {
-                    TempData["save"] = "Created account successfully!";
+                    TempData["save"] = "Account has been created successfully!";
                     return RedirectToAction(nameof(Index));
                 }
                 foreach (var error in result.Errors)
@@ -48,6 +48,78 @@ namespace OnlineShop.Areas.Customer.Controllers
                 }
             }
             return View();
+        }
+
+
+        public async Task<IActionResult> Edit(string? id)
+        {
+            var user = _db.ApplicationUsers.FirstOrDefault(c =>c.Id == id);
+            if(user == null)
+            {
+                return NotFound();
+            }
+            return View(user);           
+        }
+
+        [HttpPost]
+        public async Task<IActionResult>Edit(ApplicationUser user)
+        {
+            var userInfo = _db.ApplicationUsers.FirstOrDefault(c => c.Id == user.Id);
+            if(userInfo == null)
+            {
+                return NotFound();
+            }
+            userInfo.FirstName = user.FirstName;
+            userInfo.LastName = user.LastName;
+            var result = await _userManager.UpdateAsync(userInfo);
+            if (result.Succeeded)
+            {
+                TempData["save"] = "Information has been updated successfully!";
+                return RedirectToAction(nameof(Index));
+            }
+            return View(userInfo);
+        }
+
+        public async Task<IActionResult> Details(string? id)
+        {
+            var user = _db.ApplicationUsers.FirstOrDefault(c => c.Id == id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return View(user);
+        }
+
+
+        public async Task<IActionResult> Lockout(string? id)
+        {
+            if(id == null)
+            {
+                return NotFound();
+            }
+            var user = _db.ApplicationUsers.FirstOrDefault(c => c.Id == id);
+            if (user == null)
+            {
+                return NotFound();  
+            }
+            return View(user);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Lockout(ApplicationUser user)
+        {
+            var userInfo = _db.ApplicationUsers.FirstOrDefault(c=> c.Id == user.Id);
+            if (userInfo == null)
+            {
+                return NotFound();
+            }
+            userInfo.LockoutEnd = DateTime.Now.AddYears(100);
+            int rowAffected =  _db.SaveChanges();
+            if(rowAffected > 0)
+            {
+                TempData["save"] = "User's lockout has been excuted successfully!";
+                return RedirectToAction(nameof(Index));
+            }
+            return View(userInfo);
         }
     }
 }

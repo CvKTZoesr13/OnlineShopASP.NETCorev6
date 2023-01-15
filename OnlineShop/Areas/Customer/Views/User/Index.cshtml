@@ -46,18 +46,38 @@
             <th>
                 UserName
             </th>
-            <th></th>
             <th>
-                Options
+                Status
             </th>
+            <th></th>
+            <th></th>
         </tr>
         @foreach(var item in Model){
             <tr>
                 <td>@item.FirstName @item.LastName</td>
                 <td>@item.UserName</td>
-                <td class="text-end">
-                    <partial name="_PartialView" model="item.Id"></partial>
-                </td>
+                @if(@item.LockoutEnd>DateTime.Now&&item.LockoutEnd!=null)
+                {
+                    <td style="color:#dc3545">Disable</td>
+                    <td class="text-end"></td>
+                    <td class="text-center" style="width: 150px">
+                        <div class="btn-group">
+                            <a asp-action="Active" asp-controller="User" class="btn btn-success" asp-route-id="@item.Id">
+                                <i class="fa-solid fa-key"></i>
+                            </a>
+                            <a asp-action="Delete" asp-controller="User" class="btn btn-danger" asp-route-id="@item.Id">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </a>
+                        </div>
+                    </td>
+                }
+                else
+                {
+                    <td style="color:#198754">Enable</td>
+                    <td class="text-end">
+                        <partial name="_PartialView" model="item.Id"></partial>
+                    </td>
+                }
             </tr>
         }
     </table>

@@ -1,0 +1,34 @@
+﻿
+@{
+    ViewData["Title"] = "Checkout Index";
+}
+
+<h1>You have successfully placed your order so we'll contact to you soon. Thank you very much!</h1>
+
+@section scripts{
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+    <script src="https://unpkg.com/magic-snowflakes/dist/snowflakes.min.js"></script>
+    <script type="text/javascript">
+        var sf = new Snowflakes({
+            color: "#ed2e0c",
+            count: 80
+        });
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            var save = '@TempData["save"]'
+            if (save != '') {
+                alertify.success(save);
+            }
+            var edit = '@TempData["edit"]'
+            if (edit != '') {
+                alertify.success(edit);
+            }
+            // khong duoc de ten bien la delete -> trung tu khoa
+            var deleteProduct = '@TempData["delete"]'
+            if (deleteProduct != '') {
+                alertify.success(deleteProduct);
+            }
+        })
+    </script>
+}

@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "Edit Role";
+}
+
+<br />
+<h2 class="text-info ">Edit Role</h2>
+
+<form asp-action="Edit" method="post" id="role-form" enctype="multipart/form-data">
+    <div class="p-4 rounded border">
+        <div asp-validation-summary=ModelOnly class="text-danger">
+        </div>
+        <h3>@ViewBag.msg</h3>
+        <div class="form-group row mb-2">
+            <div class="col-2">
+                <label>Role Name</label>
+            </div>
+            <input type="hidden" value="@ViewBag.id" name="id" />
+            <div class="col-5">
+                <input id="name" name="name" required value="@ViewBag.name" class="form-control" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="Update" />
+            <a asp-action="Index" class="btn btn-success">Back to List</a>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("#user-form").validate({
+                    rules: {
+                        UserName: {
+                            required: true,
+                        },
+                        PasswordHash: {
+                            required: true,
+                        }
+                    },
+                    messages: {
+                        UserName: "Please enter your name!",
+                        PasswordHash: "Please enter your password!"
+                    }
+                });
+            })
+
+        </script>
+    }
+    }
+
+

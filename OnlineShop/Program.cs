@@ -4,7 +4,7 @@ using OnlineShop.Data;
 using OnlineShop.HelperSnippetsForSQLtoRailWay;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddRazorPages();
 builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddSession(options =>
@@ -26,9 +26,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddIdentity<IdentityUser,IdentityRole>(/*options => options.SignIn.RequireConfirmedAccount = true*/)
+builder.Services.AddIdentity<IdentityUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+
+//Login external
+
 
 var app = builder.Build();
 
@@ -59,7 +62,7 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
       name: "areas",
-      pattern: "{area=Admin}/{controller=ProductTypes}/{action=Index}/{id?}"
+      pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}"
     );
 });
 app.MapControllerRoute(
@@ -74,7 +77,7 @@ app.UseEndpoints(endpoints =>
 });
 
 
-
-//app.MapRazorPages(); 
+// pages Identify
+app.MapRazorPages();
 
 app.Run();

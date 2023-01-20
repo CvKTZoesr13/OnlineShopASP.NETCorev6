@@ -12,16 +12,6 @@
         products = new List<Products>();
     }
     count = products.Count();
-    if (SignInManager.IsSignedIn(User))
-    {
-        HttpContextAccessor.HttpContext.Session.Set("products",new List<Products>());
-        List<Products> products2 = HttpContextAccessor.HttpContext.Session.Get<List<Products>>("products");
-        if (products2 == null)
-        {
-            products2 = new List<Products>();
-        }
-        count = products2.Count();
-    }
 }
 
 

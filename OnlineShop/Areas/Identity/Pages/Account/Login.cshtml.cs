@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using OnlineShop.Data;
+using OnlineShop.Models;
 
 namespace OnlineShop.Areas.Identity.Pages.Account
 {
@@ -21,11 +23,13 @@ namespace OnlineShop.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private ApplicationDbContext _db;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger, ApplicationDbContext db)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _db = db;
         }
 
         /// <summary>
@@ -114,6 +118,22 @@ namespace OnlineShop.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+                    var userInfo = _db.ApplicationUsers.FirstOrDefault(c => c.UserName.ToLower() == Input.Email.ToLower());
+                    if (userInfo != null)
+                    {
+                        var roleInfo = (from user in _db.UserRoles
+                                        join role in _db.Roles on user.RoleId equals role.Id
+                                        where user.UserId == userInfo.Id
+                                        select new SessionUserVm()
+                                        {
+                                            UserName = Input.Email,
+                                            RoleName = role.Name
+                                        }).FirstOrDefault();
+                        if (roleInfo != null)
+                        {
+                            HttpContext.Session.SetString("roleName", roleInfo.RoleName);
+                        }
+                    }
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }

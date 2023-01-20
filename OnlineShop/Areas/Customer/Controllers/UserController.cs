@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Data;
 using OnlineShop.Models;
@@ -7,6 +8,7 @@ namespace OnlineShop.Areas.Customer.Controllers
 {
 
     [Area("Customer")]
+    [Authorize]
     public class UserController : Controller
     {
         UserManager<IdentityUser> _userManager;
@@ -17,7 +19,7 @@ namespace OnlineShop.Areas.Customer.Controllers
             _db = db;
         }
 
-
+        [AllowAnonymous]
         public IActionResult Index()
         {
             return View(_db.ApplicationUsers.ToList());
@@ -39,6 +41,7 @@ namespace OnlineShop.Areas.Customer.Controllers
                 var result = await _userManager.CreateAsync(user, user.PasswordHash);
                 if (result.Succeeded)
                 {
+                    var isSaveRole = await _userManager.AddToRoleAsync(user, "User");
                     TempData["save"] = "Account has been created successfully!";
                     return RedirectToAction(nameof(Index));
                 }

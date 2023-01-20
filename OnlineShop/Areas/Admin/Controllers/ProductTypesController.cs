@@ -6,6 +6,7 @@ using OnlineShop.Models;
 namespace OnlineShop.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize]
     public class ProductTypesController : Controller
     {
         private ApplicationDbContext _db;
@@ -13,6 +14,7 @@ namespace OnlineShop.Areas.Admin.Controllers
         {
             _db = db;
         }
+        [AllowAnonymous]
         public IActionResult Index()
         {
             //var data = _db.ProductTypes.ToList();

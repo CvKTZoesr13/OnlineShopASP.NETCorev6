@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OnlineShop.Data;
@@ -6,6 +7,7 @@ using OnlineShop.Models;
 namespace OnlineShop.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize]
     public class ProductController : Controller
     {
         private ApplicationDbContext _db;
@@ -15,7 +17,7 @@ namespace OnlineShop.Areas.Admin.Controllers
             _db=db;
             _he=he;
         }
-
+        [AllowAnonymous]
         public IActionResult Index()
         {
             return View(_db.Products.Include(c=>c.ProductTypes).Include(f=>f.SpecialTag).ToList());

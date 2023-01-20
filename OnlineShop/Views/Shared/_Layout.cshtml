@@ -1,14 +1,27 @@
 ﻿
+@using Microsoft.AspNetCore.Identity
 @using OnlineShop.Utility
 @using Microsoft.AspNetCore.Http    
 @inject IHttpContextAccessor HttpContextAccessor;
+@inject SignInManager<IdentityUser> SignInManager
 @{
+    var userRole = HttpContextAccessor.HttpContext.Session.GetString("roleName");
     int count = 0;
     List<Products> products = HttpContextAccessor.HttpContext.Session.Get<List<Products>>("products");
     if (products == null) {
         products = new List<Products>();
     }
     count = products.Count();
+    if (SignInManager.IsSignedIn(User))
+    {
+        HttpContextAccessor.HttpContext.Session.Set("products",new List<Products>());
+        List<Products> products2 = HttpContextAccessor.HttpContext.Session.Get<List<Products>>("products");
+        if (products2 == null)
+        {
+            products2 = new List<Products>();
+        }
+        count = products2.Count();
+    }
 }
 
 
@@ -56,15 +69,19 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="ProductTypes" asp-action="Index">Product Type</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="SpecialTags" asp-action="Index">Special Tag</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Product" asp-action="Index">Products</a>
-                        </li>
+                        @if ((userRole == "Admin" || userRole == "Sudo") && SignInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="ProductTypes" asp-action="Index">Product Type</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="SpecialTags" asp-action="Index">Special Tag</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="Product" asp-action="Index">Products</a>
+                            </li>
+                        }
+                       
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Customer" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>

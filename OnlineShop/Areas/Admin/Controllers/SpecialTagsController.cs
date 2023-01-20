@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Data;
 using OnlineShop.Models;
 
 namespace OnlineShop.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize]
     public class SpecialTagsController : Controller
     {
         private ApplicationDbContext _db;
@@ -13,7 +15,7 @@ namespace OnlineShop.Areas.Admin.Controllers
         {
             _db=db;
         }
-
+        [AllowAnonymous]
         public IActionResult Index()
         {
             //var data = _db.SpecialTags.ToList();

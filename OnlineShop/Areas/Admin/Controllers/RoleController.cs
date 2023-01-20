@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using OnlineShop.Areas.Admin.Models;
@@ -8,6 +9,7 @@ using System.Linq;
 namespace OnlineShop.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize]
     public class RoleController : Controller
     {
         UserManager<IdentityUser> _userManager;
@@ -19,6 +21,7 @@ namespace OnlineShop.Areas.Admin.Controllers
             _userManager = userManager;
             _db = db;
         }
+        [AllowAnonymous]
         public IActionResult Index()
         {
             var roles = _roleManager.Roles.ToList();

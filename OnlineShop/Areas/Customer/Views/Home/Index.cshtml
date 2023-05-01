@@ -4,32 +4,162 @@
 @model X.PagedList.IPagedList<Products>
 
 @{
-    ViewData["Title"] = "Home Page";
+	ViewData["Title"] = "Home Page";
+	int countSliderCarousel = 0;
 }
+<style>
+	.pagination {
+		display: inline-flex;
+	}
 
-<br /><br/>
+	.active > .page-link, .page-link.active {
+	}
+
+	.pagination-container {
+		text-align: center;
+	}
+
+	.pagination li a.page-link,
+	.pagination li span.page-link {
+		color: #555;
+		background-color: #e7e7e7;
+		font-size: 24px;
+		font-weight: 600;
+		padding: 6px 15px;
+		margin: 0 7px;
+		border: none;
+		overflow: hidden;
+		position: relative;
+		z-index: 1;
+	}
+
+		.pagination li.active a.page-link,
+		.pagination li.active span.page-link,
+		.pagination li a.page-link:hover,
+		.pagination li.active a.page-link:hover,
+		.pagination li.active span.page-link:hover {
+			color: #fff;
+			background-color: transparent;
+			text-shadow: 0 0 2px #000;
+		}
+
+		.pagination li a.page-link:before,
+		.pagination li span.page-link:before,
+		.pagination li span.page-link:after,
+		.pagination li a.page-link:after {
+			content: '';
+			background-color: #1e3799;
+			height: 75%;
+			width: 75%;
+			opacity: 0;
+			transform: translateX(-50%) translateY(-50%);
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			z-index: -1;
+			transition: all 0.3s ease 0s;
+		}
+
+		.pagination li.active a.page-link:before,
+		.pagination li.active span.page-link:before,
+		.pagination li a.page-link:hover:before {
+			opacity: 1;
+			left: 43%;
+			top: 43%;
+		}
+
+		.pagination li.active a.page-link:after,
+		.pagination li.active span.page-link:after,
+		.pagination li a.page-link:hover:after {
+			opacity: 1;
+			left: 57%;
+			top: 57%;
+		}
+
+	@@media only screen and (max-width: 480px) {
+		.pagination {
+			display: block;
+		}
+
+			.pagination li {
+				display: inline-block;
+				margin: 0 0 5px;
+			}
+	}
+</style>
+<br />
+<br />
+<div class="row mb-4">
+	<div id="carouselExampleIndicators" class="carousel slide" data-interval="5000" data-bs-ride="carousel">
+		<div class="carousel-indicators">
+			<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+			<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+			<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+		</div>
+		<div class="carousel-inner">
+			@foreach (var product in Model)
+			{
+				if (countSliderCarousel == 0)
+				{
+					<div class="carousel-item active">
+						<img src="/@product.Image" class="d-block w-100" alt="">
+					</div>
+				}
+				else
+				{
+					<div class="carousel-item">
+						<img src="/@product.Image" class="d-block w-100" alt="">
+					</div>
+				}
+				countSliderCarousel++;
+				if (countSliderCarousel == 3)
+				{
+					break;
+				}
+			}
+
+		</div>
+		<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+			<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			<span class="visually-hidden">Previous</span>
+		</button>
+		<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+			<span class="carousel-control-next-icon" aria-hidden="true"></span>
+			<span class="visually-hidden">Next</span>
+		</button>
+	</div>
+</div>
+
+
 <div class="row">
-    @foreach( var product in Model){
-        <div class=" col-4">
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h4 class="my-0 fw-normal">
-                        <label style="font-size: 23px; color: steelblue">@product.Name</label>
-                    </h4>
-                </div>
-                <img src="/@product.Image" alt="Card image" class="card-img-top" style="height: 300px;object-fit:contain "/>
-                <div class="card-header">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="btn-group">
-                            <label style="font-size: 20px; color: orangered"><b>Price : @product.Price</b></label>
-                        </div>
-                        <a asp-action="Details" asp-controller="Home" asp-route-id="@product.Id" class="btn pull-right btn-outline-info ">Details</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
+	@foreach (var product in Model)
+	{
+		<div class=" col-lg-4 col-md-6 col-xs-12 col-sm-12">
+			<div class="card mb-4">
+				<div class="card-header">
+					<h4 class="my-0 fw-normal">
+						<label style="font-size: 23px; color: steelblue">@product.Name</label>
+					</h4>
+				</div>
+				<img src="/@product.Image" alt="Card image" class="card-img-top" style="height: 300px;object-fit:cover; margin-top:16px;margin-bottom:16px; " />
+				<div class="card-header">
+					<div class="d-flex justify-content-between align-items-center">
+						<div class="btn-group">
+							<label style="font-size: 20px; color: orangered"><b>Price : @product.Price</b></label>
+						</div>
+						<a asp-action="Details" asp-controller="Home" asp-route-id="@product.Id" class="btn pull-right btn-outline-info ">Details</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
 </div>
 <div>
-    @Html.PagedListPager(Model, c=>Href("~/Customer/Home/Index?page=" +c),PagedListRenderOptionsBase.PageNumbersOnly)
+	@Html.PagedListPager(Model, c=>Href("~/Customer/Home/Index?page=" +c), new PagedListRenderOptions {
+	DisplayLinkToIndividualPages = true,
+	DisplayPageCountAndCurrentLocation = false,
+	MaximumPageNumbersToDisplay = 10,
+	LiElementClasses = new string[] { "page-item" },
+	PageClasses = new string[] { "page-link" },
+	})
 </div>

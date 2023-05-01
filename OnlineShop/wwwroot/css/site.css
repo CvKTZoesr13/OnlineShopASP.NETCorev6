@@ -16,3 +16,9 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.carousel-item {
+    min-height: 300px;
+    max-height: 420px;
+    object-fit:contain
+}

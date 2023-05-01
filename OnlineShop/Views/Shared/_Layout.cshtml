@@ -21,7 +21,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - OnlineShop</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css.map" />
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/lib/jquery/dist/jquery.min.js"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/OnlineShop.styles.css" asp-append-version="true" />
@@ -46,11 +48,143 @@
         .error{
             color:red;
         }
+
+        ul {
+            list-style: none;
+        }
+
+        li {
+            margin: 0 0 0.25rem;
+        }
+
+        a.underline-hover-effect {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .underline-hover-effect {
+            display: inline-block;
+            padding-bottom: 0.25rem; /* defines the space between text and underline */
+            position: relative;
+        }
+
+            .underline-hover-effect::before {
+                content: "";
+                position: absolute;
+                left: 10%;
+                bottom: 0;
+                width: 0;
+                height: 2px;
+                background-color: white;
+                transition: width 0.25s ease-out;
+            }
+
+            .underline-hover-effect:hover::before {
+                width: 80%;
+            }
+
+        #navbar-slide-down {
+            background-color: #333;
+            position: fixed;
+            top: -85px;
+            width: 100%;
+            display: block;
+            transition: top 0.3s;
+            z-index: 9999;
+        }
+
+        /*remove gear icon in mobile*/
+        @@media only screen and (max-width: 480px) {
+            #gear-md-lg {
+                display: none;
+            }
+        }
     </style>
 </head>
-<body>
+<body class="">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        
+        @if ((userRole == "Admin" || userRole == "Sudo") && SignInManager.IsSignedIn(User))
+        {
+            @*config navbar to sidebar when user is admin*@
+            @*sidebar*@
+            <nav tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel" class="offcanvas offcanvas-start navbar navbar-dark bg-dark border-bottom box-shadow">
+                <div class="container-fluid">
+                    <a class="navbar-brand" asp-area="Customer" asp-controller="Home" asp-action="Index">OnlineShop</a>
+@*                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>*@
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    <div class="navbar-collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            @if ((userRole == "Admin" || userRole == "Sudo") && SignInManager.IsSignedIn(User))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-white" asp-area="Admin" asp-controller="ProductTypes" asp-action="Index">Product Type</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white" asp-area="Admin" asp-controller="SpecialTags" asp-action="Index">Special Tag</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white" asp-area="Admin" asp-controller="Product" asp-action="Index">Products</a>
+                                </li>
+                            }
+
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="Customer" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="Customer" asp-controller="Home" asp-action="Cart">
+                                    <i class="fa-solid fa-cart-shopping"></i>
+                                    (@count)
+                                </a>
+                            </li>
+                        <partial name="_LoginPartial" />
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            @*end sidebar*@
+            <nav id="navbar-slide-down" class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
+                <div class="container-fluid">
+                    <a class="navbar-brand" asp-area="Customer" asp-controller="Home" asp-action="Index">OnlineShop</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            @if ((userRole == "Admin" || userRole == "Sudo") && SignInManager.IsSignedIn(User))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link underline-hover-effect text-white" asp-area="Admin" asp-controller="ProductTypes" asp-action="Index">Product Type</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link underline-hover-effect text-white" asp-area="Admin" asp-controller="SpecialTags" asp-action="Index">Special Tag</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link underline-hover-effect text-white" asp-area="Admin" asp-controller="Product" asp-action="Index">Products</a>
+                                </li>
+                            }
+
+                            <li class="nav-item">
+                                <a class="nav-link underline-hover-effect text-white" asp-area="Customer" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link underline-hover-effect text-white" asp-area="Customer" asp-controller="Home" asp-action="Cart">
+                                    <i class="fa-solid fa-cart-shopping"></i>
+                                    (@count)
+                                </a>
+                            </li>
+                        </ul>
+                        <partial name="_LoginPartial" />
+                    </div>
+                </div>
+            </nav>
+        } else
+        {
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="Customer" asp-controller="Home" asp-action="Index">OnlineShop</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -62,21 +196,21 @@
                         @if ((userRole == "Admin" || userRole == "Sudo") && SignInManager.IsSignedIn(User))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="ProductTypes" asp-action="Index">Product Type</a>
+                                <a class="nav-link text-white" asp-area="Admin" asp-controller="ProductTypes" asp-action="Index">Product Type</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="SpecialTags" asp-action="Index">Special Tag</a>
+                                <a class="nav-link text-white" asp-area="Admin" asp-controller="SpecialTags" asp-action="Index">Special Tag</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="Product" asp-action="Index">Products</a>
+                                <a class="nav-link text-white" asp-area="Admin" asp-controller="Product" asp-action="Index">Products</a>
                             </li>
                         }
                        
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Customer" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-white" asp-area="Customer" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Customer" asp-controller="Home" asp-action="Cart">
+                            <a class="nav-link text-white" asp-area="Customer" asp-controller="Home" asp-action="Cart">
                                 <i class="fa-solid fa-cart-shopping"></i>
                                 (@count)
                             </a>
@@ -86,9 +220,16 @@
                 </div>
             </div>
         </nav>
+        }
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            @if ((userRole == "Admin" || userRole == "Sudo") && SignInManager.IsSignedIn(User))
+            {
+                <a id="gear-md-lg" class="btn btn-primary mt-4 mb-3" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+                    <i class="fa-solid fa-gears"></i>
+                </a>
+            }
             @RenderBody()
         </main>
     </div>
@@ -106,8 +247,21 @@
     <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.html5.min.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.print.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @*<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        // When the user scrolls down 20px from the top of the document, slide down the navbar
+        window.onscroll = function () { scrollFunction() };
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                document.getElementById("navbar-slide-down").style.top = "0";
+            } else {
+                document.getElementById("navbar-slide-down").style.top = "-85px";
+            }
+        }
+    </script>
 </body>
 </html>

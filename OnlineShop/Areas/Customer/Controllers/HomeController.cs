@@ -35,7 +35,7 @@ namespace OnlineShop.Areas.Customer.Controllers
             {
                 return NotFound();
             }
-            var product = _db.Products.Include(c => c.ProductTypes).FirstOrDefault(c => c.Id == id);
+            var product = _db.Products.Include(c => c.ProductTypes).Include(c => c.SpecialTag).FirstOrDefault(c => c.Id == id);
             if (product == null)
             {
                 return NotFound();
@@ -54,7 +54,7 @@ namespace OnlineShop.Areas.Customer.Controllers
             {
                 return NotFound();
             }
-            var product = _db.Products.Include(c => c.ProductTypes).FirstOrDefault(c => c.Id == id);
+            var product = _db.Products.Include(c => c.ProductTypes).Include(c => c.SpecialTag).FirstOrDefault(c => c.Id == id);
             if (product == null)
             {
                 return NotFound();

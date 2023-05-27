@@ -64,23 +64,23 @@
             </div>
             <div class="form-group row mb-2">
                 <div class="col-4">
-                    <label asp-for="ProductTypeId"></label>
+                    <label asp-for="ProductTypes"></label>
                 </div>
                 <div class="col-8">
                     @*<select asp-for="ProductTypeId" asp-items="ViewBag.productTypeId" class="form-control"></select>*@
-                    <input asp-for="ProductTypeId" readonly class="form-control" />
+                    <input asp-for="ProductTypes.ProductType" readonly class="form-control" />
                 </div>
-                <span asp-validation-for="ProductTypeId" class="text-danger"></span>
+                <span asp-validation-for="ProductTypes.ProductType" class="text-danger"></span>
             </div>
             <div class="form-group row mb-2">
                 <div class="col-4">
-                    <label asp-for="SpecialTagId"></label>
+                    <label asp-for="SpecialTag.SpecialTag"></label>
                 </div>
                 <div class="col-8">
                     @*<select asp-for="SpecialTagId" asp-items="ViewBag.TagId" class="form-control"></select>*@
-                    <input asp-for="SpecialTagId" readonly class="form-control" />
+                    <input asp-for="SpecialTag.SpecialTag" readonly class="form-control" />
                 </div>
-                <span asp-validation-for="SpecialTagId" class="text-danger"></span>
+                <span asp-validation-for="SpecialTag.SpecialTag" class="text-danger"></span>
             </div>
             <div class="form-group row mb-2">
                 <div class="col-4">

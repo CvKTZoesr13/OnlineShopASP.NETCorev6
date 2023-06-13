@@ -22,9 +22,15 @@ namespace OnlineShop.Areas.Customer.Controllers
         {
             _db = db;
         }
-            
-        public IActionResult Index(int? page)
+
+        public IActionResult Index(int? page, string? searchString)
         {
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                var product = _db.Products.Include(c => c.ProductTypes).Include(c => c.SpecialTag).Where(p => p.Name.Contains(searchString)).ToList();
+                if (product.Count != 0) return View(product.ToPagedList(page?? 1, 9));
+                else return View("NotFound");
+            }
             return View(_db.Products.Include(c => c.ProductTypes).Include(c => c.SpecialTag).ToList().ToPagedList(page?? 1, 9));
         }
 
@@ -49,7 +55,7 @@ namespace OnlineShop.Areas.Customer.Controllers
         public IActionResult ProductDetail(int? id)
         {
             List<Products> products = new List<Products>();
-                
+
             if (id == null)
             {
                 return NotFound();
@@ -61,7 +67,7 @@ namespace OnlineShop.Areas.Customer.Controllers
             }
 
             products = HttpContext.Session.Get<List<Products>>("products");
-            if(products == null)
+            if (products == null)
             {
                 products = new List<Products>();
             }
@@ -75,10 +81,10 @@ namespace OnlineShop.Areas.Customer.Controllers
         public IActionResult Remove(int? id)
         {
             List<Products> products = HttpContext.Session.Get<List<Products>>("products");
-            if(products != null )
+            if (products != null)
             {
                 var product = products.FirstOrDefault(c => c.Id == id);
-                if(product!= null)
+                if (product!= null)
                 {
                     products.Remove(product);
                     HttpContext.Session.Set("products", products);
@@ -91,7 +97,7 @@ namespace OnlineShop.Areas.Customer.Controllers
         public IActionResult Cart()
         {
             List<Products> products = HttpContext.Session.Get<List<Products>>("products");
-            if(products == null)
+            if (products == null)
             {
                 products = new List<Products>();
             }

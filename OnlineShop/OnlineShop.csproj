@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
+    <Folder Include="SQLScript\" />
     <Folder Include="wwwroot\Images\" />
   </ItemGroup>
 
